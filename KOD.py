@@ -5,7 +5,35 @@ import os
 Kamera = cv2.VideoCapture(0)
 kernel = np.ones((15,15),np.uint8)
 
+def ResimFarkBul (Resim1,Resim2):
+    Resim2=cv2.resize(Resim2,(Resim1.shape[1],Resim1.shape[0]))
+    Fark_Resim =cv2.absdiff(Resim1,Resim2)
+    Fark_Sayi = cv2.countNonZero(Fark_Resim)
+    return Fark_Sayi
 
+def VeriYukle():
+    Veri_isimler = []
+    Veri_Resimler = []
+
+    Dosyalar = os.listdir("Veri/")
+    for Dosya in Dosyalar:
+        Veri_isimler.append(Dosya.replace(".jpg",""))
+        Veri_Resimler.append(cv2.imread("Veri/"+Dosya,0))
+    return Veri_isimler,Veri_Resimler
+
+def Sınıflandır (El_Resim,Veri_isimler,Veri_Resimler):
+    Min_Index = 0
+    Min_Deger = ResimFarkBul(El_Resim,Veri_Resimler[0])
+    for t in range(len(Veri_isimler)):
+        Fark_Deger = ResimFarkBul(El_Resim,Veri_Resimler[t])
+        if(Fark_Deger<Min_Deger):
+            Min_Deger = Fark_Deger
+            Min_Index=t
+    return  Veri_isimler[Min_Index]
+
+
+Veri_isimler, Veri_Resimler = VeriYukle()
+Veri_Resim1 = cv2.imread("Veri/Makas.jpg",0)
 while True:
     ret, Kare = Kamera.read()
     Kesilmiş_Kare = Kare[0:250,0:250]
@@ -38,7 +66,8 @@ while True:
         El_Resim = Renk_Filtresi_Sonucu[y:y+h,x:x+w]
         cv2.imshow("El_Resim",El_Resim)
 
-       
+        print(Sınıflandır(El_Resim,Veri_isimler,Veri_Resimler))
+
 
     cv2.imshow("Kare", Kare)
     cv2.imshow("Kesilmiş_Kare", Kesilmiş_Kare)
