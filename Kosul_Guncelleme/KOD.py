@@ -1,6 +1,9 @@
 import cv2
 import numpy as np
 import os
+import random
+
+
 
 Kamera = cv2.VideoCapture(0)
 kernel = np.ones((15,15),np.uint8)
@@ -24,6 +27,7 @@ def VeriYukle():
 def Sınıflandır (El_Resim,Veri_isimler,Veri_Resimler):
     Min_Index = 0
     Min_Deger = ResimFarkBul(El_Resim,Veri_Resimler[0])
+
     for t in range(len(Veri_isimler)):
         Fark_Deger = ResimFarkBul(El_Resim,Veri_Resimler[t])
         if(Fark_Deger<Min_Deger):
@@ -33,12 +37,12 @@ def Sınıflandır (El_Resim,Veri_isimler,Veri_Resimler):
 
 
 Veri_isimler, Veri_Resimler = VeriYukle()
-Veri_Resim1 = cv2.imread("Veri/Makas.jpg",0)
+
 while True:
     ret, Kare = Kamera.read()
     Kesilmiş_Kare = Kare[0:250,0:250]
     Kesilmiş_Kare_HSV = cv2.cvtColor(Kesilmiş_Kare,cv2.COLOR_BGR2HSV)
-
+    c=0
 
 
     Alt_Degerler = np.array([0,50,90])
@@ -68,6 +72,73 @@ while True:
 
         print(Sınıflandır(El_Resim,Veri_isimler,Veri_Resimler))
 
+        taskagitmakas = ["Tas", "Kagit", "Makass"]
+        a= ""
+        Tas = taskagitmakas[0]
+        Kagit = taskagitmakas[1]
+        Makass = taskagitmakas[2]
+        gir = Sınıflandır(El_Resim,Veri_isimler,Veri_Resimler)
+
+
+    if (len(gir) == len(a)):
+        print("şuan el görüntüsü yok")
+        gir = Sınıflandır(El_Resim, Veri_isimler, Veri_Resimler)
+
+
+
+    elif(len(gir) != len(a)):
+
+        a = random.choice(taskagitmakas)
+
+        print("BİLGİSAYAR", a, "SEÇTİ")
+        print(len(gir))
+        print("a:", len(a))
+
+
+        if gir == Kagit:
+            if Kagit == a:
+                print("BERABERE")
+                print("----------")
+
+
+            elif Tas == a:
+                print("KAZANDINIZ")
+                print("----------")
+
+
+
+            elif Makass == a:
+                print("KAYBETTİNİZ")
+                print("----------")
+
+
+        elif gir == Tas:
+            if Tas == a:
+                print("BERABERE")
+                print("----------")
+
+            elif Kagit == a:
+                print("KAYBETTİNİZ")
+                print("----------")
+
+            elif Makass == a:
+                print("KAZANDINIZ")
+                print("----------")
+
+        elif gir == Makass:
+            if Makass == a:
+                print("BERABERE")
+                print("----------")
+
+
+            elif Tas == a:
+                print("KAYBETTİNİZ")
+                print("----------")
+
+            elif Kagit == a:
+                print("KAZANDINIZ")
+                print("----------")
+                
 
     cv2.imshow("Kare", Kare)
     cv2.imshow("Kesilmiş_Kare", Kesilmiş_Kare)
